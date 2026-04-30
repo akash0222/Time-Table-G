@@ -20,7 +20,7 @@ app.use("/api/timetable", timetableRoutes);
 app.use("/api/upload", uploadRoutes);
 
 mongoose.connect(process.env.MONGO_URI as string, {
-  serverSelectionTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 500000,
   family: 4,
   tls: true,
 })
