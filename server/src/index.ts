@@ -1,33 +1,38 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import timetableRoutes from "./routes/timetable";
 import authRoutes from "./routes/auth";
 import uploadRoutes from "./routes/upload";
 import { seedAdmin } from "./utils/seedAdmin";
-import dotenv from "dotenv";
 
-dotenv.config(); // ✅ ADD THIS LINE
+dotenv.config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/upload", uploadRoutes);
-app.use("/api/timetable", timetableRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/timetable", timetableRoutes);
+app.use("/api/upload", uploadRoutes);
 
-mongoose
-  .connect(process.env.MONGO_URI as string)
+mongoose.connect(process.env.MONGO_URI as string, {
+  serverSelectionTimeoutMS: 10000,
+  family: 4,
+  tls: true,
+})
   .then(async () => {
-    console.log("MongoDB Connected");
+    console.log("✅ MongoDB Connected");
 
     await seedAdmin();
 
     app.listen(5000, () => {
-      console.log("Server running on http://localhost:5000");
+      console.log("🚀 Server running on http://localhost:5000");
     });
   })
-  .catch((err) => console.log(err));
+  .catch((err) => {
+    console.error("❌ MongoDB Error:", err.message);
+  });
