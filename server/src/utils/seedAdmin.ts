@@ -14,9 +14,9 @@ export const seedAdmin = async () => {
   await User.create({
     name: "Admin",
     email: "admin@gmail.com",
-    password: 123456,
+    password: hashedPassword, // ✅ FIXED
     role: "admin",
   });
 
-  console.log("🔥 Admin user created");
+  console.log("🔥 Admin created: admin@gmail.com / 123456");
 };

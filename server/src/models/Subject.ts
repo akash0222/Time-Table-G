@@ -1,15 +1,10 @@
 import mongoose from "mongoose";
 
-interface ISubject {
-  name: string;
-  faculty: string;
-  hoursPerWeek: number;
-}
-
-const subjectSchema = new mongoose.Schema<ISubject>({
+const subjectSchema = new mongoose.Schema({
   name: String,
-  faculty: String,
+  faculty: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   hoursPerWeek: Number,
+  maxPerDay: { type: Number, default: 2 },
 });
 
-export default mongoose.model<ISubject>("Subject", subjectSchema);
+export default mongoose.model("Subject", subjectSchema);
