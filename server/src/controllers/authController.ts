@@ -4,19 +4,17 @@ import Organization from "../models/Organization";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// ✅ REGISTER
+// REGISTER
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, orgName } = req.body;
 
-    // validation
     if (!name || !email || !password || !orgName) {
       return res.status(400).json({ msg: "All fields required" });
     }
 
-    // check existing user
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    const existing = await User.findOne({ email });
+    if (existing) {
       return res.status(400).json({ msg: "User already exists" });
     }
 
@@ -38,13 +36,13 @@ export const register = async (req: Request, res: Response) => {
     );
 
     res.json({ token });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 };
 
-// ✅ LOGIN
+// LOGIN
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -72,8 +70,8 @@ export const login = async (req: Request, res: Response) => {
     );
 
     res.json({ token });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 };
