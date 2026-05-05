@@ -5,16 +5,35 @@ export interface IUser extends Document {
   email: string;
   password: string;
   organizationId: mongoose.Types.ObjectId;
+
+  // ✅ ADD THIS
+  role: "admin" | "faculty";
 }
 
 const userSchema = new mongoose.Schema<IUser>({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
+  name: { type: String, required: true },
+
+  email: {
+    type: String,
+    unique: true,
+    required: true
+  },
+
+  password: { type: String, required: true },
+
   organizationId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization"
+    ref: "Organization",
+    required: true
+  },
+
+  // ✅ ADD THIS BLOCK
+  role: {
+    type: String,
+    enum: ["admin", "faculty"],
+    default: "admin"
   }
-});
+
+}, { timestamps: true });
 
 export default mongoose.model<IUser>("User", userSchema);

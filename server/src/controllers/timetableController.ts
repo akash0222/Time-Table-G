@@ -1,15 +1,23 @@
-export const generateTimetable = async (req, res) => {
-  const { subjects, teachers, slots } = req.body;
+import Timetable from "../models/Timetable";
 
-  let timetable: any[] = [];
+export const generateTimetable = async (req: any, res: any) => {
+  const { subjects, teachers, slots, className } = req.body;
+
+  let schedule: any[] = [];
 
   for (let i = 0; i < slots.length; i++) {
-    timetable.push({
+    schedule.push({
       slot: slots[i],
       subject: subjects[i % subjects.length],
       teacher: teachers[i % teachers.length]
     });
   }
+
+  const timetable = await Timetable.create({
+    organizationId: req.orgId, // 🔥 MULTI-TENANT KEY
+    className,
+    schedule
+  });
 
   res.json(timetable);
 };
