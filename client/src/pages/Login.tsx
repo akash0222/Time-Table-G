@@ -1,25 +1,28 @@
+// src/pages/Login.tsx
 import { useState, useContext } from "react";
-import axios from "axios";
+import { TextField, Button, Container } from "@mui/material";
+import API from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const handle = async () => {
-    const res = await axios.post("http://localhost:5000/api/auth/login", {
-      email,
-      password,
-    });
+  const handleLogin = async () => {
+    const res = await API.post("/auth/login", { email, password });
     login(res.data.token);
+    navigate("/");
   };
 
   return (
-    <div>
-      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-      <input onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-      <button onClick={handle}>Login</button>
-    </div>
+    <Container>
+      <h2>Login</h2>
+      <TextField fullWidth label="Email" onChange={(e) => setEmail(e.target.value)} />
+      <TextField fullWidth label="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
+      <Button variant="contained" onClick={handleLogin}>Login</Button>
+    </Container>
   );
 }

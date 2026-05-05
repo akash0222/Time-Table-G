@@ -1,13 +1,14 @@
+// src/context/AuthContext.tsx
 import { createContext, useState } from "react";
 
 export const AuthContext = createContext<any>(null);
 
-export const AuthProvider = ({ children }: any) => {
+export default function AuthProvider({ children }: any) {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
-  const login = (t: string) => {
-    localStorage.setItem("token", t);
-    setToken(t);
+  const login = (token: string) => {
+    localStorage.setItem("token", token);
+    setToken(token);
   };
 
   const logout = () => {
@@ -20,4 +21,4 @@ export const AuthProvider = ({ children }: any) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
