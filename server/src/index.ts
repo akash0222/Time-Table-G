@@ -1,22 +1,25 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import connectDB from "./config/db";
+import authRoutes from "./routes/authRoutes";
+import timetableRoutes from "./routes/timetableRoutes";
 
-import authRoutes from "./routes/auth";
-import subjectRoutes from "./routes/subject";
-import timetableRoutes from "./routes/timetable";
+app.use("/api/timetable", timetableRoutes);
+
+app.use("/api/auth", authRoutes);
 
 dotenv.config();
+connectDB();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/subjects", subjectRoutes);
-app.use("/api/timetable", timetableRoutes);
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/timetable", require("./routes/timetableRoutes"));
 
-mongoose.connect(process.env.MONGO_URI!)
-  .then(() => app.listen(5000, () => console.log("Server running")));
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
+});

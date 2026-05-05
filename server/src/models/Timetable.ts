@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-export default mongoose.model("Timetable", new mongoose.Schema({
-  college: Object,
-  class: Object,
-  version: Number,
-  data: Object,
-  published: Boolean
-}, { timestamps: true }));
+const timetableSchema = new mongoose.Schema({
+  organizationId: mongoose.Schema.Types.ObjectId,
+  className: String,
+  schedule: Array
+});
+
+export default mongoose.model("Timetable", timetableSchema);
