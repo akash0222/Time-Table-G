@@ -1,17 +1,32 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
-export interface IUser {
-  name: string;
-  email: string;
-  password: string;
-  role: "admin" | "faculty";
-}
-
-const userSchema = new mongoose.Schema<IUser>({
+const schema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
   password: String,
-  role: { type: String, default: "admin" },
+
+  role: {
+    type: String,
+    enum: ["superadmin", "admin", "faculty"],
+    default: "admin",
+  },
+
+  college: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "College",
+  },
 });
 
-export default mongoose.model<IUser>("User", userSchema);
+// hash
+schema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+schema.methods.comparePassword = function (p: string) {
+  return bcrypt.compare(p, this.password);
+};
+
+export default mongoose.model("User", schema);

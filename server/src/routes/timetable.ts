@@ -1,25 +1,25 @@
 import express from "express";
-import { generateTimetable } from "../utils/generateTimetable";
+import { generateTimetable } from "../services/timetableService";
 import { protect } from "../middleware/auth";
+import { tenant } from "../middleware/tenant";
 import Timetable from "../models/Timetable";
 
 const router = express.Router();
 
-router.post("/generate", protect, async (req: any, res) => {
-  try {
-    const { subjects, days, slotsPerDay } = req.body;
+router.post("/generate", protect, tenant, async (req: any, res) => {
+  const { subjects, days, slotsPerDay, classId } = req.body;
 
-    const timetable = generateTimetable(subjects, days, slotsPerDay);
+  const data = generateTimetable(subjects, days, slotsPerDay);
 
-    const saved = await Timetable.create({
-      user: req.user.id,
-      data: timetable,
-    });
+  const saved = await Timetable.create({
+    college: req.collegeId,
+    class: classId,
+    version: 1,
+    data,
+    published: false
+  });
 
-    res.json(saved);
-  } catch (err: any) {
-    res.status(500).json({ message: err.message });
-  }
+  res.json(saved);
 });
 
 export default router;

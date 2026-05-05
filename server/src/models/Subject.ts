@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-const subjectSchema = new mongoose.Schema({
+export default mongoose.model("Subject", new mongoose.Schema({
   name: String,
-  faculty: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  faculty: String,
   hoursPerWeek: Number,
-  maxPerDay: { type: Number, default: 2 },
-});
-
-export default mongoose.model("Subject", subjectSchema);
+  college: { type: mongoose.Schema.Types.ObjectId, ref: "College" },
+class: { type: mongoose.Schema.Types.ObjectId, ref: "Class" }
+}));

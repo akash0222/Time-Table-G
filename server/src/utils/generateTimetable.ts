@@ -1,32 +1,21 @@
-type Subject = {
-  name: string;
-  hoursPerWeek: number;
-};
+export function generateTimetable(subjects: any[], days: string[], slots: number) {
+  const table: any = {};
 
-export function generateTimetable(
-  subjects: Subject[],
-  days: string[],
-  slotsPerDay: number
-) {
-  const timetable: Record<string, (string | null)[]> = {};
+  days.forEach(d => table[d] = Array(slots).fill(null));
 
-  days.forEach((day) => {
-    timetable[day] = Array(slotsPerDay).fill(null);
-  });
-
-  subjects.forEach((sub) => {
+  subjects.forEach(sub => {
     let hours = sub.hoursPerWeek;
 
     while (hours > 0) {
       const day = days[Math.floor(Math.random() * days.length)];
-      const slot = Math.floor(Math.random() * slotsPerDay);
+      const slot = Math.floor(Math.random() * slots);
 
-      if (!timetable[day][slot]) {
-        timetable[day][slot] = sub.name;
+      if (!table[day][slot]) {
+        table[day][slot] = sub.name;
         hours--;
       }
     }
   });
 
-  return timetable;
+  return table;
 }
